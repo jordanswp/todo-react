@@ -1,6 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-
+import Form from './form';
+import ToDoItem from './todoitem';
 
 
 class App extends React.Component {
@@ -9,63 +10,45 @@ class App extends React.Component {
       super()
 
       this.state = {
-        toDoList : ["clean", "wash"],
-        word : '',
-        inputClass: '',
+        toDoList : [],
+        userInput : '',
       }
-}
+  }
 
 //input form
-    changeHandler(event){
+    inputField(event){
       var input = event.target.value;
-
-      if( input.length <= 1 ){
-        this.setState({
-            inputClass: 'error'
-        })
-      }
-      // console.log("new input ->  " + input);
       this.setState({
-        word: input
+        userInput: input
       })
     }
 
 //set event when user clicks submit button
     clickEvent(event){
-        let inputtedWord = this.state.word;
-        console.log("word is " + this.state.word);
-
+        let userType = this.state.userInput;
+        console.log("userinput is " + this.state.userInput);
 
         let list = this.state.toDoList;
-        console.log("list is: " + list)
-
-        this.mainInput.value = "";
-
         this.setState({
-            list: list.push(inputtedWord),
-        })
+            list: list.push(
+                        {item: userType},
+                    )
+        });
     }
 
   render() {
-
-    let inputClass = this.state.inputClass
-
-    const data = this.state.toDoList;
-    const listItems = data.map((d) => <li>{d}</li>)
-
     return (
       <div>
 
-      <div>
-      {listItems}
-      </div>
+      <Form
+        inputField={(e)=>{this.inputField(e)}}
+        clickEvent={(event)=>{this.clickEvent(event)}}
+      />
 
-        <input
-        className={inputClass}
-        ref={(ref) => this.mainInput= ref}
-        onChange={(event)=>{this.changeHandler(event);}}/>
+      <ToDoItem
+        toDoList={this.state.toDoList}
+      />
 
-        <button onClick={(event)=>{this.clickEvent(event);}}>Submit</button>
       </div>
     );
   }
